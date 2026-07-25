@@ -15,7 +15,8 @@ end
 % L = 50;
 % N_values = round(linspace(1, L, 20));
 % L = 1000;
-N_values = round(linspace(1, L, 100));
+numvalues = min(100,L/2);
+N_values = round(linspace(1, L, numvalues));
 
 % number of iterations to run the simulation
 T = 6*L;
@@ -86,7 +87,7 @@ for iteration = 1:length(R_in)
                     v_next = v_next - 1;
                 end
 
-                % S3: Deceleration
+                % S3: Deceleration (computed using neighbors updated velocitied)
 
                 % find next closest vehicle's current location and velocity
                 next_closest_ix = sort_idx((find(n == sort_idx,1) + 1));
@@ -111,6 +112,8 @@ for iteration = 1:length(R_in)
                     next_closest_ix = sort_idx((find(n == sort_idx,1) + 1));
                     xp = all_cars_x(next_closest_ix);
                     vp = v_next_vec(next_closest_ix);
+
+                    % update velocity (slow down if too close to next vehicle)
                     x_curr = all_cars_x(n);
                     if x_curr < xp
                         d = xp - x_curr - 1;
